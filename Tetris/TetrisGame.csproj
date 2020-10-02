@@ -39,11 +39,12 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tetris\GameWorld.cs" />
+    <Compile Include="Menu\MenuObject.cs" />
+    <Compile Include="Menu\MenuItems.cs" />
+    <Compile Include="Main\GameWorld.cs" />
     <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tetris\TetrisGame.cs" />
-    <Compile Include="Tetris\TetrisGrid.cs" />
+    <Compile Include="Main\TetrisGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -56,6 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tetris\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

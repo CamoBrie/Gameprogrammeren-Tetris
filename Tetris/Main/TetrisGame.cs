@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Helpers;
 
-namespace Tetris
+namespace Main
 {
     class TetrisGame : Game
     {
@@ -19,7 +19,7 @@ namespace Tetris
 
 
         /// <summary>
-        /// A static reference to the width and height of the application.
+        /// A static reference to the width and height of the screen.
         /// </summary>
         public static Point ScreenSize { get; private set; }
 
@@ -35,9 +35,6 @@ namespace Tetris
             // initialize the graphics device
             GraphicsDeviceManager graphics = new GraphicsDeviceManager(this);
 
-            // set the graphics settings
-            IsMouseVisible = true;
-
             // store a static reference to the content manager, so other objects can use it
             ContentManager = Content;
 
@@ -49,16 +46,12 @@ namespace Tetris
             graphics.PreferredBackBufferWidth = ScreenSize.X;
             graphics.PreferredBackBufferHeight = ScreenSize.Y;
 
-            // set the window position to be in the middle of the screen
-            Window.Position = new Point(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2 - graphics.PreferredBackBufferWidth / 2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2 - graphics.PreferredBackBufferHeight / 2);
-
             // create the input helper object
             inputHelper = new InputHelper();
         }
 
         protected override void LoadContent()
         {
-            // create the spritebatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // create and reset the game world
