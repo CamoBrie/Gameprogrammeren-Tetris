@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using Tetris.Main;
+using Main;
 
 namespace Main
 {
@@ -50,7 +50,7 @@ namespace Main
         Texture2D test;
         Effect effect;
         InputHelper InputHelper;
-        Settings settings;
+        public Settings st;
 
         /// <summary>
         /// All of our menu items
@@ -66,7 +66,7 @@ namespace Main
             // initialize our objects and set the gamestate
             random = new Random();
             InputHelper = new InputHelper();
-            settings = new Settings();
+            st = new Settings();
 
             gameState = GameState.MainMenu;
 
@@ -91,7 +91,7 @@ namespace Main
             temp = new List<MenuItems>
             {
                 new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
-                new MenuItems("Starting Level", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
+                new MenuItems("Starting Level", Color.White, () => {  return 0; }),
 
             };
             Settings = new MenuObject(temp, "Settings", 300);
@@ -161,6 +161,16 @@ namespace Main
                     if (inputHelper.KeyPressed(Keys.Down) && Settings.currentItem < Settings.getLength() - 1)
                     {
                         Settings.currentItem++;
+                    }
+
+                    if(inputHelper.KeyPressed(Keys.Right))
+                    {
+                        st.ChangeSetting(true, Settings.currentItem);
+                    }
+
+                    if (inputHelper.KeyPressed(Keys.Left))
+                    {
+                        st.ChangeSetting(false, Settings.currentItem);
                     }
 
                     if (inputHelper.KeyPressed(Keys.Enter))

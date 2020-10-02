@@ -6,21 +6,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tetris.Main
+namespace Main
 {
     class Settings
     {
-
-        public enum AllSettings
-        {
-            StartingLevel,
-            GridHeight,
-            GridWidth,
-            Animations,
-            SpecialBlocks,
-            HiddenMode
-        }
-
         public int StartingLevel;
         public int GridWidth;
         public int GridHeight;
@@ -39,11 +28,11 @@ namespace Tetris.Main
             this.HiddenMode = HiddenMode;
         }
 
-        public void ChangeSetting(bool positive = true, AllSettings currentSetting = 0)
+        public void ChangeSetting(bool positive = true, int currentSetting = 0)
         {
             switch(currentSetting)
             {
-                case AllSettings.StartingLevel:
+                case 0:
                     if(positive && this.StartingLevel < 20)
                     {
                         this.StartingLevel++;
@@ -53,7 +42,7 @@ namespace Tetris.Main
                     }
                     break;
 
-                case AllSettings.GridWidth:
+                case 1:
                     if (positive && this.GridWidth < 20)
                     {
                         this.GridWidth++;
@@ -64,7 +53,7 @@ namespace Tetris.Main
                     }
                     break;
 
-                case AllSettings.GridHeight:
+                case 2:
                     if (positive && this.GridHeight < 30)
                     {
                         this.GridHeight++;
@@ -75,15 +64,15 @@ namespace Tetris.Main
                     }
                     break;
 
-                case AllSettings.Animations:
+                case 3:
                     this.Animations = !this.Animations;
                     break;
 
-                case AllSettings.SpecialBlocks:
+                case 4:
                     this.SpecialBlocks = !this.SpecialBlocks;
                     break;
 
-                case AllSettings.HiddenMode:
+                case 5:
                     this.HiddenMode = !this.HiddenMode;
                     break;
 

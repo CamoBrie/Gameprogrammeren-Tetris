@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Main;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,14 @@ namespace Menu
         {
             for(int i = 0; i < items.Count; i++)
             {
-                DrawCenteredString(spriteBatch, font, items[i].text, new Vector2(450, height + 40 * i), items[i].color);
+                if (this.name == "Settings")
+                {
+                    DrawCenteredString(spriteBatch, font, $"{items[i].text} <>", new Vector2(450, height + 40 * i), items[i].color);
+                }
+                else
+                {
+                    DrawCenteredString(spriteBatch, font, items[i].text, new Vector2(450, height + 40 * i), items[i].color);
+                }
             }
 
             DrawCenteredString(spriteBatch, font, "________", new Vector2(450, height + 40 * currentItem), Color.White);
