@@ -10,74 +10,84 @@ namespace Main
 {
     class Settings
     {
-        public int StartingLevel;
-        public int GridWidth;
-        public int GridHeight;
-        public bool Animations;
-        public bool SpecialBlocks;
-        public bool HiddenMode;
+
+        public static int StartingLevel = 1;
+        public static int GridWidth = 10;
+        public static int GridHeight = 20;
+        public static bool Animations = true;
+        public static bool SpecialBlocks = true;
+        public static bool HiddenMode = false;
         
 
-        public Settings(int StartingLevel = 1, int GridWidth = 10, int GridHeight = 20, bool Animations = true, bool SpecialBlocks = true, bool HiddenMode = false)
-        {
-            this.StartingLevel = StartingLevel;
-            this.GridWidth = GridWidth;
-            this.GridHeight = GridHeight;
-            this.Animations = Animations;
-            this.SpecialBlocks = SpecialBlocks;
-            this.HiddenMode = HiddenMode;
-        }
-
-        public void ChangeSetting(bool positive = true, int currentSetting = 0)
+        public static void ChangeSetting(bool positive = true, int currentSetting = 0)
         {
             switch(currentSetting)
             {
                 case 0:
-                    if(positive && this.StartingLevel < 20)
+                    if(positive && StartingLevel < 20)
                     {
-                        this.StartingLevel++;
-                    } else if(this.StartingLevel > 1)
+                        StartingLevel++;
+                    } else if(!positive && StartingLevel > 1)
                     {
-                        this.StartingLevel--;
+                        StartingLevel--;
                     }
                     break;
 
                 case 1:
-                    if (positive && this.GridWidth < 20)
+                    if (positive && GridWidth < 20)
                     {
-                        this.GridWidth++;
+                        GridWidth++;
                     }
-                    else if (this.GridWidth > 6)
+                    else if (!positive && GridWidth > 6)
                     {
-                        this.GridWidth--;
+                        GridWidth--;
                     }
                     break;
 
                 case 2:
-                    if (positive && this.GridHeight < 30)
+                    if (positive && GridHeight < 30)
                     {
-                        this.GridHeight++;
+                        GridHeight++;
                     }
-                    else if (this.GridHeight > 10)
+                    else if (!positive && GridHeight > 10)
                     {
-                        this.GridHeight--;
+                        GridHeight--;
                     }
                     break;
 
                 case 3:
-                    this.Animations = !this.Animations;
+                    Animations = !Animations;
                     break;
 
                 case 4:
-                    this.SpecialBlocks = !this.SpecialBlocks;
+                    SpecialBlocks = !SpecialBlocks;
                     break;
 
                 case 5:
-                    this.HiddenMode = !this.HiddenMode;
+                    HiddenMode = !HiddenMode;
                     break;
 
             }
 
+        }
+
+        public static String getValue(int currentSetting)
+        {
+            switch(currentSetting)
+            {
+                case 0:
+                    return StartingLevel.ToString();
+                case 1:
+                    return GridWidth.ToString();
+                case 2:
+                    return GridHeight.ToString();
+                case 3: return Animations.ToString();
+                case 4: return SpecialBlocks.ToString();
+                case 5: return HiddenMode.ToString();
+                default:
+                    return "";
+
+            }
         }
     }
 }

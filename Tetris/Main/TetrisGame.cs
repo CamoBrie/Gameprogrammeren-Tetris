@@ -46,6 +46,9 @@ namespace Main
             graphics.PreferredBackBufferWidth = ScreenSize.X;
             graphics.PreferredBackBufferHeight = ScreenSize.Y;
 
+            // set the monogame variables
+            IsMouseVisible = true;
+
             // create the input helper object
             inputHelper = new InputHelper();
         }
@@ -54,9 +57,9 @@ namespace Main
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // create and reset the game world
+            // create the game world
             gameWorld = new GameWorld();
-            gameWorld.Reset();
+
         }
 
         protected override void Update(GameTime gameTime)

@@ -13,7 +13,6 @@ namespace Menu
     class MenuObject
     {
         private List<MenuItems> items;
-        private SpriteBatch spriteBatch;
         private String name;
         public int currentItem;
         private int height;
@@ -35,9 +34,9 @@ namespace Menu
         {
             for(int i = 0; i < items.Count; i++)
             {
-                if (this.name == "Settings")
+                if (this.name == "Settings" && i != items.Count-1)
                 {
-                    DrawCenteredString(spriteBatch, font, $"{items[i].text} <>", new Vector2(450, height + 40 * i), items[i].color);
+                    DrawCenteredString(spriteBatch, font, $"{items[i].text} <{Settings.getValue(i)}>", new Vector2(450, height + 40 * i), items[i].color);
                 }
                 else
                 {
@@ -45,7 +44,7 @@ namespace Menu
                 }
             }
 
-            DrawCenteredString(spriteBatch, font, "________", new Vector2(450, height + 40 * currentItem), Color.White);
+            DrawCenteredString(spriteBatch, font, "________", new Vector2(450, height + 2 + 40 * currentItem), Color.White);
             DrawCenteredString(spriteBatch, font, name, new Vector2(450, height - 40), Color.Gold);
         }
 

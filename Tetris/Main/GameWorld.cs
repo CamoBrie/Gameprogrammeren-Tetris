@@ -50,13 +50,12 @@ namespace Main
         Texture2D test;
         Effect effect;
         InputHelper InputHelper;
-        public Settings st;
 
         /// <summary>
         /// All of our menu items
         /// </summary>
         MenuObject MainMenu;
-        MenuObject Settings;
+        MenuObject SettingsMenu;
         MenuObject Credits;
         MenuObject GameOver;
         MenuObject Controls;
@@ -66,7 +65,6 @@ namespace Main
             // initialize our objects and set the gamestate
             random = new Random();
             InputHelper = new InputHelper();
-            st = new Settings();
 
             gameState = GameState.MainMenu;
 
@@ -90,11 +88,16 @@ namespace Main
             //Settings
             temp = new List<MenuItems>
             {
-                new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
-                new MenuItems("Starting Level", Color.White, () => {  return 0; }),
+                new MenuItems("Starting Level", Color.White),
+                new MenuItems("Grid Width", Color.White),
+                new MenuItems("Grid Height", Color.White),
+                new MenuItems("Animations", Color.White),
+                new MenuItems("Special Blocks", Color.White),
+                new MenuItems("Hidden Mode", Color.White),
+                new MenuItems("Back to Main Menu", Color.Gray, () => { this.gameState = GameState.MainMenu; return 0; }),
 
             };
-            Settings = new MenuObject(temp, "Settings", 300);
+            SettingsMenu = new MenuObject(temp, "Settings", 300);
 
             //Credits
             temp = new List<MenuItems>
@@ -153,29 +156,29 @@ namespace Main
                     break;
                 case GameState.Settings:
 
-                    if (inputHelper.KeyPressed(Keys.Up) && Settings.currentItem > 0)
+                    if (inputHelper.KeyPressed(Keys.Up) && SettingsMenu.currentItem > 0)
                     {
-                        Settings.currentItem--;
+                        SettingsMenu.currentItem--;
                     }
 
-                    if (inputHelper.KeyPressed(Keys.Down) && Settings.currentItem < Settings.getLength() - 1)
+                    if (inputHelper.KeyPressed(Keys.Down) && SettingsMenu.currentItem < SettingsMenu.getLength() - 1)
                     {
-                        Settings.currentItem++;
+                        SettingsMenu.currentItem++;
                     }
 
                     if(inputHelper.KeyPressed(Keys.Right))
                     {
-                        st.ChangeSetting(true, Settings.currentItem);
+                        Settings.ChangeSetting(true, SettingsMenu.currentItem);
                     }
 
                     if (inputHelper.KeyPressed(Keys.Left))
                     {
-                        st.ChangeSetting(false, Settings.currentItem);
+                        Settings.ChangeSetting(false, SettingsMenu.currentItem);
                     }
 
                     if (inputHelper.KeyPressed(Keys.Enter))
                     {
-                        Settings.OnAction();
+                        SettingsMenu.OnAction();
                     }
 
                     break;
@@ -242,7 +245,7 @@ namespace Main
                     break;
 
                 case GameState.Settings:
-                    Settings.Draw(spriteBatch, font);
+                    SettingsMenu.Draw(spriteBatch, font);
                     break;
 
                 case GameState.Credits:
@@ -262,10 +265,6 @@ namespace Main
 
             }
             spriteBatch.End();
-        }
-
-        public void Reset()
-        {
         }
 
     }
