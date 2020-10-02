@@ -39,6 +39,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Main\Settings.cs" />
     <Compile Include="Menu\MenuObject.cs" />
     <Compile Include="Menu\MenuItems.cs" />
     <Compile Include="Main\GameWorld.cs" />
