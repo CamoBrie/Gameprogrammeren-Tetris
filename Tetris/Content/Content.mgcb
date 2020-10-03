@@ -32,3 +32,10 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/block.png
 
+#begin Fonts/ComicSans.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ComicSans.spritefont
+

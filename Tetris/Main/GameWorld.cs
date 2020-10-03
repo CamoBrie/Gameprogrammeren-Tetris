@@ -69,7 +69,7 @@ namespace Main
             gameState = GameState.MainMenu;
 
             // load in custom content
-            font = TetrisGame.ContentManager.Load<SpriteFont>("Fonts/gameFont");
+            font = TetrisGame.ContentManager.Load<SpriteFont>("Fonts/ComicSans");
             test = TetrisGame.ContentManager.Load<Texture2D>("Sprites/block");
 
             //Initialize the menu items
@@ -88,13 +88,13 @@ namespace Main
             //Settings
             temp = new List<MenuItems>
             {
-                new MenuItems("Starting Level", Color.White),
-                new MenuItems("Grid Width", Color.White),
-                new MenuItems("Grid Height", Color.White),
-                new MenuItems("Animations", Color.White),
-                new MenuItems("Special Blocks", Color.White),
-                new MenuItems("Hidden Mode", Color.White),
-                new MenuItems("Back to Main Menu", Color.Gray, () => { this.gameState = GameState.MainMenu; return 0; }),
+                new MenuItems("Starting Level", Color.Gray),
+                new MenuItems("Grid Width", Color.Gray),
+                new MenuItems("Grid Height", Color.Gray),
+                new MenuItems("Animations", Color.Gray),
+                new MenuItems("Special Blocks", Color.Gray),
+                new MenuItems("Hidden Mode", Color.Gray),
+                new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
 
             };
             SettingsMenu = new MenuObject(temp, "Settings", 300);

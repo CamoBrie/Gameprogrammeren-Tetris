@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 
 namespace Main
 {
+
+    enum AllSettings
+    {
+        Startinglevel,
+        GridWidth,
+        GridHeight,
+        Animations,
+        SpecialBlocks,
+        HiddenMode,
+        None
+    }
     class Settings
     {
 
@@ -85,7 +96,7 @@ namespace Main
                 case 4: return SpecialBlocks.ToString();
                 case 5: return HiddenMode.ToString();
                 default:
-                    return "";
+                    return "x";
 
             }
         }

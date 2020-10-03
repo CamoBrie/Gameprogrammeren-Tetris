@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Main;
+using Microsoft.Xna.Framework;
 using System;
 using System.Windows.Forms;
 
@@ -8,6 +9,7 @@ namespace Menu
     {
         public string text;
         public Color color;
+        public AllSettings setting;
         public Func<int> callBack;
 
         public MenuItems(string s, Color c) : this(s,c, () => { return 0; })
@@ -20,6 +22,7 @@ namespace Menu
             this.text = text;
             this.color = color;
             this.callBack = callBack;
+
         }
  
     }
