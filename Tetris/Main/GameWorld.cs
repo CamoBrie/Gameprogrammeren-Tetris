@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using Main;
+using Tetris.Tetris;
 
 namespace Main
 {
@@ -31,8 +32,8 @@ namespace Main
         /// <summary>
         /// The random-number generator of the game.
         /// </summary>
-        static Random Random { get { return random; } }
-        static Random random;
+        //static Random Random { get { return random; } }
+        //static Random random;
 
         /// <summary>
         /// The main font of the game.
@@ -47,32 +48,34 @@ namespace Main
         /// <summary>
         /// All of our custom content
         /// </summary>
-        Texture2D test;
-        Effect effect;
-        InputHelper InputHelper;
+        readonly GameManager game;
 
         /// <summary>
         /// All of our menu items
         /// </summary>
-        MenuObject MainMenu;
-        MenuObject SettingsMenu;
-        MenuObject Credits;
-        MenuObject GameOver;
-        MenuObject Controls;
+        readonly MenuObject MainMenu;
+        readonly MenuObject SettingsMenu;
+        readonly MenuObject Credits;
+        readonly MenuObject GameOver;
+        readonly MenuObject Controls;
 
         public GameWorld()
         {
             // initialize our objects and set the gamestate
-            random = new Random();
-            InputHelper = new InputHelper();
+            //random = new Random();
+            game = new GameManager();
 
             gameState = GameState.MainMenu;
 
             // load in custom content
             font = TetrisGame.ContentManager.Load<SpriteFont>("Fonts/ComicSans");
-            test = TetrisGame.ContentManager.Load<Texture2D>("Sprites/block");
 
-            //Initialize the menu items
+
+            //
+            // Initialize the menu items
+            //
+
+            // Main Menu
             List<MenuItems> temp = new List<MenuItems> {
                 new MenuItems("Play Game", Color.White, () => { this.gameState = GameState.Running; return 0; }),
                 new MenuItems("Settings", Color.White, () => { this.gameState = GameState.Settings; return 0; }),
@@ -85,7 +88,7 @@ namespace Main
             };
             MainMenu = new MenuObject(temp, "Main Menu", 400);
 
-            //Settings
+            // Settings
             temp = new List<MenuItems>
             {
                 new MenuItems("Starting Level", Color.Gray),
@@ -99,7 +102,7 @@ namespace Main
             };
             SettingsMenu = new MenuObject(temp, "Settings", 300);
 
-            //Credits
+            // Credits
             temp = new List<MenuItems>
             {
                 new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
@@ -110,7 +113,7 @@ namespace Main
             };
             Credits = new MenuObject(temp, "Credits", 300);
 
-            //Controls
+            // Controls
             temp = new List<MenuItems>
             {
                 new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
@@ -124,6 +127,20 @@ namespace Main
             };
             Controls = new MenuObject(temp, "Controls", 300);
 
+            // Game Over
+            temp = new List<MenuItems>
+            {
+                new MenuItems("Game Over", Color.Gray),
+                new MenuItems("Your score is: ", Color.Gray),
+                new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
+
+
+            };
+            GameOver = new MenuObject(temp, "GameOver", 300);
+
+            //
+            // End of menu items
+            //
         }
         public void HandleInput(GameTime gameTime, InputHelper inputHelper)
         {
@@ -136,6 +153,12 @@ namespace Main
             //change what we do based on gamestate
             switch (gameState)
             {
+                // default
+                default:
+                    gameState = GameState.MainMenu;
+                    break;
+
+                // Menu - main menu
                 case GameState.MainMenu:
 
                     if (inputHelper.KeyPressed(Keys.Up) && MainMenu.currentItem > 0)
@@ -154,6 +177,8 @@ namespace Main
                     }
 
                     break;
+
+                // Menu - settings
                 case GameState.Settings:
 
                     if (inputHelper.KeyPressed(Keys.Up) && SettingsMenu.currentItem > 0)
@@ -161,19 +186,19 @@ namespace Main
                         SettingsMenu.currentItem--;
                     }
 
-                    if (inputHelper.KeyPressed(Keys.Down) && SettingsMenu.currentItem < SettingsMenu.getLength() - 1)
+                    if (inputHelper.KeyPressed(Keys.Down) && SettingsMenu.currentItem < SettingsMenu.GetLength() - 1)
                     {
                         SettingsMenu.currentItem++;
                     }
 
                     if(inputHelper.KeyPressed(Keys.Right))
                     {
-                        Settings.ChangeSetting(true, SettingsMenu.currentItem);
+                        Settings.ChangeSetting(true, Settings.GetSetting(SettingsMenu.currentItem));
                     }
 
                     if (inputHelper.KeyPressed(Keys.Left))
                     {
-                        Settings.ChangeSetting(false, SettingsMenu.currentItem);
+                        Settings.ChangeSetting(false, Settings.GetSetting(SettingsMenu.currentItem));
                     }
 
                     if (inputHelper.KeyPressed(Keys.Enter))
@@ -182,6 +207,8 @@ namespace Main
                     }
 
                     break;
+
+                // Menu - credits
                 case GameState.Credits:
                     if (inputHelper.KeyPressed(Keys.Enter))
                     {
@@ -189,6 +216,7 @@ namespace Main
                     }
                     break;
 
+                // Menu - controls
                 case GameState.Controls:
                     if (inputHelper.KeyPressed(Keys.Enter))
                     {
@@ -196,11 +224,17 @@ namespace Main
                     }
                     break;
 
+                // Menu - game over
                 case GameState.GameOver:
-
+                    if (inputHelper.KeyPressed(Keys.Enter))
+                    {
+                        GameOver.OnAction();
+                    }
                     break;
-                case GameState.Running:
 
+                // The game
+                case GameState.Running:
+                    game.HandleInput(gameTime, inputHelper);
                     break;
 
             }
@@ -209,24 +243,20 @@ namespace Main
 
         public void Update(GameTime gameTime)
         {
-            this.HandleInput(gameTime, InputHelper);
-            //change what we draw based on gamestate
+
+            //change what we update based on gamestate
             switch (gameState)
             {
+                // don't have to update anything
                 case GameState.MainMenu:
-
-                    break;
                 case GameState.Settings:
-
-                    break;
                 case GameState.Credits:
-
-                    break;
                 case GameState.GameOver:
-
                     break;
-                case GameState.Running:
 
+                // update game
+                case GameState.Running:
+                    game.Update(gameTime);
                     break;
 
             }
@@ -234,38 +264,44 @@ namespace Main
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            //Change our sprite mode to use shaders
+            //start the drawing of the spritebatch
             spriteBatch.Begin();
 
             //change what we draw based on gamestate
             switch (gameState)
             {
+                //draw the menu
                 case GameState.MainMenu:
                     MainMenu.Draw(spriteBatch, font);
                     break;
 
+                //draw the menu
                 case GameState.Settings:
                     SettingsMenu.Draw(spriteBatch, font);
                     break;
 
+                //draw the menu
                 case GameState.Credits:
                     Credits.Draw(spriteBatch, font);
                     break;
 
+                //draw the menu
                 case GameState.Controls:
                     Controls.Draw(spriteBatch, font);
                     break;
 
+                //draw the menu
                 case GameState.GameOver:
-
+                    GameOver.Draw(spriteBatch, font);
                     break;
-                case GameState.Running:
 
+                //draw the game
+                case GameState.Running:
+                    game.Draw(spriteBatch);
                     break;
 
             }
             spriteBatch.End();
         }
-
     }
 }

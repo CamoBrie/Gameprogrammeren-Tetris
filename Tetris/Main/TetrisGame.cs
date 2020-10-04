@@ -9,7 +9,7 @@ namespace Main
     class TetrisGame : Game
     {
         SpriteBatch spriteBatch;
-        InputHelper inputHelper;
+        readonly InputHelper inputHelper;
         GameWorld gameWorld;
 
         /// <summary>

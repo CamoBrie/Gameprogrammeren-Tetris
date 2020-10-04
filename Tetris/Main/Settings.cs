@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace Main
 {
 
+    // global enum for all the settings
     enum AllSettings
     {
         Startinglevel,
@@ -21,7 +22,7 @@ namespace Main
     }
     class Settings
     {
-
+        // the variables for the settings
         public static int StartingLevel = 1;
         public static int GridWidth = 10;
         public static int GridHeight = 20;
@@ -30,11 +31,15 @@ namespace Main
         public static bool HiddenMode = false;
         
 
-        public static void ChangeSetting(bool positive = true, int currentSetting = 0)
+        // change a setting with respect to the bounds
+        public static void ChangeSetting(bool positive = true, AllSettings currentSetting = 0)
         {
+            //switch on the currentSetting that needs to be changed
             switch(currentSetting)
             {
-                case 0:
+                // change setting based on bounds
+
+                case AllSettings.Startinglevel:
                     if(positive && StartingLevel < 20)
                     {
                         StartingLevel++;
@@ -44,7 +49,7 @@ namespace Main
                     }
                     break;
 
-                case 1:
+                case AllSettings.GridWidth:
                     if (positive && GridWidth < 20)
                     {
                         GridWidth++;
@@ -55,7 +60,7 @@ namespace Main
                     }
                     break;
 
-                case 2:
+                case AllSettings.GridHeight:
                     if (positive && GridHeight < 30)
                     {
                         GridHeight++;
@@ -66,15 +71,18 @@ namespace Main
                     }
                     break;
 
-                case 3:
+
+                // invert the setting | bool setting
+                
+                case AllSettings.Animations:
                     Animations = !Animations;
                     break;
 
-                case 4:
+                case AllSettings.SpecialBlocks:
                     SpecialBlocks = !SpecialBlocks;
                     break;
 
-                case 5:
+                case AllSettings.HiddenMode:
                     HiddenMode = !HiddenMode;
                     break;
 
@@ -82,23 +90,42 @@ namespace Main
 
         }
 
-        public static String getValue(int currentSetting)
+        // get the value of the setting in String-form (only for displaying)
+        public static String GetValue(AllSettings currentSetting)
         {
             switch(currentSetting)
             {
-                case 0:
+                case AllSettings.Startinglevel:
                     return StartingLevel.ToString();
-                case 1:
+                case AllSettings.GridWidth:
                     return GridWidth.ToString();
-                case 2:
+                case AllSettings.GridHeight:
                     return GridHeight.ToString();
-                case 3: return Animations.ToString();
-                case 4: return SpecialBlocks.ToString();
-                case 5: return HiddenMode.ToString();
+                case AllSettings.Animations: return Animations.ToString();
+                case AllSettings.SpecialBlocks: return SpecialBlocks.ToString();
+                case AllSettings.HiddenMode: return HiddenMode.ToString();
                 default:
                     return "x";
 
             }
         }
+
+        //get the setting based on the int
+        public static AllSettings GetSetting(int currentSetting)
+        {
+            switch (currentSetting)
+            {
+                case 0: return AllSettings.Startinglevel;
+                case 1: return AllSettings.GridWidth;
+                case 2: return AllSettings.GridHeight;
+                case 3: return AllSettings.Animations;
+                case 4: return AllSettings.SpecialBlocks;
+                case 5: return AllSettings.HiddenMode;
+                default:
+                    return AllSettings.None;
+
+            }
+        }
+
     }
 }
