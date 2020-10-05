@@ -3,9 +3,7 @@ using Menu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using Main;
 using Tetris.Tetris;
 
 namespace Main
@@ -63,7 +61,7 @@ namespace Main
         public GameWorld()
         {
             // initialize our objects and set the gamestate
-            //random = new Random();
+
 
             gameState = GameState.MainMenu;
 
@@ -196,7 +194,7 @@ namespace Main
                         SettingsMenu.currentItem++;
                     }
 
-                    if(inputHelper.KeyPressed(Keys.Right))
+                    if (inputHelper.KeyPressed(Keys.Right))
                     {
                         Settings.ChangeSetting(true, Settings.GetSetting(SettingsMenu.currentItem));
                     }
@@ -278,7 +276,7 @@ namespace Main
                 // draw the menu
                 case GameState.MainMenu:
                     // draw the title screen image
-                    spriteBatch.Draw(mainMenuImage, new Vector2(250,100), Color.White);
+                    spriteBatch.Draw(mainMenuImage, new Vector2(250, 100), Color.White);
                     MainMenu.Draw(spriteBatch, font);
                     break;
 

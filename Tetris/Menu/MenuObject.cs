@@ -3,10 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Menu
 {
@@ -48,10 +44,10 @@ namespace Menu
         /// <param name="font">the font to be used</param>
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
-            for(int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 // only for settings, change the text to also include the value of the setting
-                if (this.name == "Settings" && i != items.Count-1)
+                if (this.name == "Settings" && i != items.Count - 1)
                 {
                     DrawCenteredString(spriteBatch, font, $"{items[i].text} <{Settings.GetValue(Settings.GetSetting(i))}>", new Vector2(450, height + 40 * i), items[i].color);
                 }

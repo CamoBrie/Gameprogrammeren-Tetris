@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tetris.Tetris
 {
@@ -27,30 +22,26 @@ namespace Tetris.Tetris
         public Color color { get; private set; }
 
         public Vector2 position;
-        public Shape(Shapes currentShape)
+        public Shape(Shapes currentShape, int gridWidth)
         {
             this.shape = currentShape;
-            this.position = new Vector2(0, 0);
+            this.position = new Vector2((int)gridWidth / 2 - 1, 0);
             setShape(currentShape);
-        }
-
-        public void Fall()
-        {
-            this.position.Y++;
         }
 
         public void Move(bool right, int gridWidth)
         {
-            if(right)
+            if (right)
             {
                 if (this.position.X + getWidth() < gridWidth)
                 {
                     this.position.X++;
                 }
-            } else
+            }
+            else
             {
-                if(this.position.X + getEmptyWidth() > 0)
-                this.position.X--;
+                if (this.position.X + getEmptyWidth() > 0)
+                    this.position.X--;
             }
         }
 
@@ -67,28 +58,7 @@ namespace Tetris.Tetris
 
         // https://www.ict.social/csharp/monogame/csharp-programming-games-monogame-tetris/tetris-in-monogame-block
         // code to rotate an 4x4 int array
-        public void RotateRight(int gridWidth)
-        {
-            if(shape == Shapes.C)
-            {
-                return;
-            }
-
-            // temp array
-            int[,] a = CopyTiles(arr);
-            // rotate the array by swapping coordinates, like it was a matrix
-            for (int x = 0; x < 4; x++)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    arr[x, y] = a[y, 3- x];
-                    MoveToGrid(gridWidth);
-
-                }
-            }
-        }
-
-        public void RotateLeft(int gridWidth)
+        public void Rotate(bool right, int gridWidth)
         {
             if (shape == Shapes.C)
             {
@@ -102,12 +72,18 @@ namespace Tetris.Tetris
             {
                 for (int y = 0; y < 4; y++)
                 {
-                    arr[x, y] = a[3- y, x];
+                    if (right)
+                    {
+                        arr[x, y] = a[y, 3 - x];
+                    }
+                    else
+                    {
+                        arr[x, y] = a[3 - y, x];
+                    }
                     MoveToGrid(gridWidth);
+
                 }
             }
-
-            
         }
 
         public void Draw(Vector2 border, SpriteBatch spriteBatch, Texture2D filled_block)
@@ -134,13 +110,13 @@ namespace Tetris.Tetris
         private int getWidth()
         {
             int result = 0;
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
-                    if(arr[i,j] > 0)
+                    if (arr[i, j] > 0)
                     {
-                        result = i+1;
+                        result = i + 1;
                     }
                 }
 
@@ -164,9 +140,10 @@ namespace Tetris.Tetris
             return 0;
         }
 
-        private void setShape(Shapes currentShape)
+        public void setShape(Shapes currentShape)
         {
-            switch (currentShape) {
+            switch (currentShape)
+            {
                 //set the shape variables
 
                 case Shapes.C:
@@ -256,7 +233,7 @@ namespace Tetris.Tetris
                 default:
                     break;
 
-        }
+            }
 
 
         }

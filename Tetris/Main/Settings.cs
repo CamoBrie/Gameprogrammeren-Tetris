@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Main
 {
@@ -29,21 +23,22 @@ namespace Main
         public static bool Animations = true;
         public static bool SpecialBlocks = true;
         public static bool HiddenMode = false;
-        
+
 
         // change a setting with respect to the bounds
         public static void ChangeSetting(bool positive = true, AllSettings currentSetting = 0)
         {
             //switch on the currentSetting that needs to be changed
-            switch(currentSetting)
+            switch (currentSetting)
             {
                 // change setting based on bounds
 
                 case AllSettings.Startinglevel:
-                    if(positive && StartingLevel < 20)
+                    if (positive && StartingLevel < 20)
                     {
                         StartingLevel++;
-                    } else if(!positive && StartingLevel > 1)
+                    }
+                    else if (!positive && StartingLevel > 1)
                     {
                         StartingLevel--;
                     }
@@ -73,7 +68,7 @@ namespace Main
 
 
                 // invert the setting | bool setting
-                
+
                 case AllSettings.Animations:
                     Animations = !Animations;
                     break;
@@ -93,7 +88,7 @@ namespace Main
         // get the value of the setting in String-form (only for displaying)
         public static String GetValue(AllSettings currentSetting)
         {
-            switch(currentSetting)
+            switch (currentSetting)
             {
                 case AllSettings.Startinglevel:
                     return StartingLevel.ToString();

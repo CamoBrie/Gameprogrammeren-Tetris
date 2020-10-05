@@ -1,11 +1,9 @@
-﻿using Main;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
-using System.Windows.Forms;
 
 namespace Menu
 {
-     class MenuItems
+    class MenuItems
     {
         /// <summary>
         /// text: the text to display
@@ -17,9 +15,9 @@ namespace Menu
         public Func<int> callBack;
 
         // Create a menuItem without a callback function
-        public MenuItems(string s, Color c) : this(s,c, () => { return 0; })
+        public MenuItems(string s, Color c) : this(s, c, () => { return 0; })
         {
-       
+
         }
 
         // Create a menuItem with a callback function
@@ -30,6 +28,6 @@ namespace Menu
             this.callBack = callBack;
 
         }
- 
+
     }
 }
