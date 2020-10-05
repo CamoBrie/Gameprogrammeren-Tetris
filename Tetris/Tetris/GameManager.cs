@@ -30,7 +30,7 @@ namespace Tetris.Tetris
         }
 
         // runs everytime we draw to the screen
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
 
         }

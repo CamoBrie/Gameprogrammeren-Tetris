@@ -39,6 +39,7 @@ namespace Main
         /// The main font of the game.
         /// </summary>
         readonly SpriteFont font;
+        readonly Texture2D mainMenuImage;
 
         /// <summary>
         /// The current game state.
@@ -69,6 +70,7 @@ namespace Main
 
             // load in custom content
             font = TetrisGame.ContentManager.Load<SpriteFont>("Fonts/ComicSans");
+            mainMenuImage = TetrisGame.ContentManager.Load<Texture2D>("Sprites/mainmenu");
 
 
             //
@@ -264,40 +266,42 @@ namespace Main
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            //start the drawing of the spritebatch
+            // start the drawing of the spritebatch
             spriteBatch.Begin();
 
-            //change what we draw based on gamestate
+            // change what we draw based on gamestate
             switch (gameState)
             {
-                //draw the menu
+                // draw the menu
                 case GameState.MainMenu:
+                    // draw the title screen image
+                    spriteBatch.Draw(mainMenuImage, new Vector2(250,100), Color.White);
                     MainMenu.Draw(spriteBatch, font);
                     break;
 
-                //draw the menu
+                // draw the menu
                 case GameState.Settings:
                     SettingsMenu.Draw(spriteBatch, font);
                     break;
 
-                //draw the menu
+                // draw the menu
                 case GameState.Credits:
                     Credits.Draw(spriteBatch, font);
                     break;
 
-                //draw the menu
+                // draw the menu
                 case GameState.Controls:
                     Controls.Draw(spriteBatch, font);
                     break;
 
-                //draw the menu
+                // draw the menu
                 case GameState.GameOver:
                     GameOver.Draw(spriteBatch, font);
                     break;
 
-                //draw the game
+                // draw the game
                 case GameState.Running:
-                    game.Draw(spriteBatch);
+                    game.Draw(spriteBatch, font);
                     break;
 
             }

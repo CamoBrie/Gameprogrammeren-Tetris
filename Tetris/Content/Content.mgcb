@@ -20,7 +20,14 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/GameFont.spritefont
 
-#begin Sprites/block.png
+#begin Fonts/ComicSans.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ComicSans.spritefont
+
+#begin Sprites/mainmenu.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -30,12 +37,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/block.png
-
-#begin Fonts/ComicSans.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/ComicSans.spritefont
+/build:Sprites/mainmenu.png
 
