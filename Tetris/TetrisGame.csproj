@@ -38,6 +38,9 @@
     <ApplicationIcon>
     </ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main\Settings.cs" />
     <Compile Include="Menu\MenuObject.cs" />
@@ -47,6 +50,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main\TetrisGame.cs" />
     <Compile Include="Tetris\GameManager.cs" />
+    <Compile Include="Tetris\Shape.cs" />
+    <Compile Include="Tetris\TetrisGrid.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

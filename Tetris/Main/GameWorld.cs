@@ -64,14 +64,17 @@ namespace Main
         {
             // initialize our objects and set the gamestate
             //random = new Random();
-            game = new GameManager();
 
             gameState = GameState.MainMenu;
 
             // load in custom content
             font = TetrisGame.ContentManager.Load<SpriteFont>("Fonts/ComicSans");
             mainMenuImage = TetrisGame.ContentManager.Load<Texture2D>("Sprites/mainmenu");
+            Texture2D empty_block = TetrisGame.ContentManager.Load<Texture2D>("Sprites/emptyblock");
+            Texture2D filled_block = TetrisGame.ContentManager.Load<Texture2D>("Sprites/filledblock");
 
+            // initialize the game with it base point at 20,20
+            game = new GameManager(new Vector2(20, 20), empty_block, filled_block);
 
             //
             // Initialize the menu items
@@ -79,7 +82,7 @@ namespace Main
 
             // Main Menu
             List<MenuItems> temp = new List<MenuItems> {
-                new MenuItems("Play Game", Color.White, () => { this.gameState = GameState.Running; return 0; }),
+                new MenuItems("Play Game", Color.White, () => { this.gameState = GameState.Running; game.Initialize(); return 0; }),
                 new MenuItems("Settings", Color.White, () => { this.gameState = GameState.Settings; return 0; }),
                 new MenuItems("Credits", Color.White, () => { this.gameState = GameState.Credits; return 0; }),
                 new MenuItems("Controls", Color.White, () => { this.gameState = GameState.Controls; return 0; }),
