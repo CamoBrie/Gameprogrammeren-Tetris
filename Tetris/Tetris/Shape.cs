@@ -29,22 +29,6 @@ namespace Tetris.Tetris
             setShape(currentShape);
         }
 
-        public void Move(bool right, int gridWidth)
-        {
-            if (right)
-            {
-                if (this.position.X + getWidth() < gridWidth)
-                {
-                    this.position.X++;
-                }
-            }
-            else
-            {
-                if (this.position.X + getEmptyWidth() > 0)
-                    this.position.X--;
-            }
-        }
-
         // https://www.ict.social/csharp/monogame/csharp-programming-games-monogame-tetris/tetris-in-monogame-block
         // code to copy an 4x4 int array, this is necessary because c# passes array's by reference
         private int[,] CopyTiles(int[,] tiles)
@@ -58,7 +42,7 @@ namespace Tetris.Tetris
 
         // https://www.ict.social/csharp/monogame/csharp-programming-games-monogame-tetris/tetris-in-monogame-block
         // code to rotate an 4x4 int array
-        public void Rotate(bool right, int gridWidth)
+        public void Rotate(bool right, int gridWidth, GameManager game)
         {
             if (shape == Shapes.C)
             {
@@ -80,7 +64,7 @@ namespace Tetris.Tetris
                     {
                         arr[x, y] = a[3 - y, x];
                     }
-                    MoveToGrid(gridWidth);
+                    game.MoveToGrid(gridWidth);
 
                 }
             }
@@ -95,19 +79,9 @@ namespace Tetris.Tetris
                         border.Y + (j + position.Y) * filled_block.Height), color);
         }
 
-        private void MoveToGrid(int gridWidth)
-        {
-            while (position.X + getWidth() > gridWidth)
-            {
-                Move(false, gridWidth);
-            }
-            while (position.X + getEmptyWidth() < 0)
-            {
-                Move(true, gridWidth);
-            }
-        }
 
-        private int getWidth()
+
+        public int getWidth()
         {
             int result = 0;
             for (int i = 0; i < 4; i++)
@@ -124,7 +98,7 @@ namespace Tetris.Tetris
             return result;
         }
 
-        private int getEmptyWidth()
+        public int getEmptyWidth()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -149,9 +123,9 @@ namespace Tetris.Tetris
                 case Shapes.C:
                     int[,] cblocks =
             {
-                {1, 1, 0, 0 },
-                {1, 1, 0, 0 },
                 {0, 0, 0, 0 },
+                {0, 1, 1, 0 },
+                {0, 1, 1, 0 },
                 {0, 0, 0, 0 },
             };
                     this.arr = cblocks;
@@ -161,9 +135,9 @@ namespace Tetris.Tetris
                 case Shapes.L:
                     int[,] lblocks =
             {
+                {0, 0, 0, 0 },
                 {0, 0, 1, 0 },
                 {1, 1, 1, 0 },
-                {0, 0, 0, 0 },
                 {0, 0, 0, 0 },
             };
                     this.arr = lblocks;
@@ -173,9 +147,9 @@ namespace Tetris.Tetris
                 case Shapes.RL:
                     int[,] rlblocks =
             {
-                {1, 0, 0, 0 },
-                {1, 1, 1, 0 },
                 {0, 0, 0, 0 },
+                {0, 1, 0, 0 },
+                {0, 1, 1, 1 },
                 {0, 0, 0, 0 },
             };
                     this.arr = rlblocks;
@@ -185,8 +159,8 @@ namespace Tetris.Tetris
                 case Shapes.I:
                     int[,] iblocks =
             {
-                {1, 1, 1, 1 },
                 {0, 0, 0, 0 },
+                {1, 1, 1, 1 },
                 {0, 0, 0, 0 },
                 {0, 0, 0, 0 },
             };
@@ -197,9 +171,9 @@ namespace Tetris.Tetris
                 case Shapes.Z:
                     int[,] zblocks =
             {
-                {1, 1, 0, 0 },
-                {0, 1, 1, 0 },
                 {0, 0, 0, 0 },
+                {0, 1, 1, 0 },
+                {0, 0, 1, 1 },
                 {0, 0, 0, 0 },
             };
                     this.arr = zblocks;
@@ -209,9 +183,9 @@ namespace Tetris.Tetris
                 case Shapes.S:
                     int[,] sblocks =
             {
+                {0, 0, 0, 0 },
                 {0, 1, 1, 0 },
                 {1, 1, 0, 0 },
-                {0, 0, 0, 0 },
                 {0, 0, 0, 0 },
             };
                     this.arr = sblocks;
@@ -221,9 +195,9 @@ namespace Tetris.Tetris
                 case Shapes.T:
                     int[,] tblocks =
             {
+                {0, 0, 0, 0 },
                 {0, 1, 0, 0 },
                 {1, 1, 1, 0 },
-                {0, 0, 0, 0 },
                 {0, 0, 0, 0 },
             };
                     this.arr = tblocks;

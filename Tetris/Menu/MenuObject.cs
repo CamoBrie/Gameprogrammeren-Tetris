@@ -28,14 +28,14 @@ namespace Menu
             this.height = height;
         }
 
-        /*  Add an item afterwards
+
  
-        public void AddItem(MenuItems item)
+        public void RenameItem(int item, String text)
         {
-            this.items.Add(item);
+            this.items[item].text = text;
         }
 
-        */
+
 
         /// <summary>
         /// The function that draws the menu to the spritebatch

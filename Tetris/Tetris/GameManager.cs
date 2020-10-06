@@ -28,6 +28,8 @@ namespace Tetris.Tetris
         private int totalTicks;
         private Shape currentShape;
         private Random random;
+        public bool gameOver;
+        public int score;
 
         // input variables
         bool holdsLeftShift;
@@ -63,6 +65,12 @@ namespace Tetris.Tetris
                 }
             }
             this.currentShape = new Shape(GenerateShape(), Settings.GridWidth);
+
+            if(!grid.NextPosValid(currentShape, 5))
+            {
+                gameOver = true;
+            }
+
         }
 
         public Shape.Shapes GenerateShape()
@@ -72,6 +80,34 @@ namespace Tetris.Tetris
             return (Shape.Shapes)type;
         }
 
+        public void Move(Shape currentShape, bool right, int gridWidth)
+        {
+            if (right)
+            {
+                if (currentShape.position.X + currentShape.getWidth() < gridWidth && grid.NextPosValid(currentShape, 2))
+                {
+                    currentShape.position.X++;
+                }
+            }
+            else
+            {
+                if (currentShape.position.X + currentShape.getEmptyWidth() > 0 && grid.NextPosValid(currentShape, 3))
+                    currentShape.position.X--;
+            }
+        }
+
+        public void MoveToGrid(int gridWidth)
+        {
+            while (currentShape.position.X + currentShape.getWidth() > gridWidth)
+            {
+                Move(currentShape, false, gridWidth);
+            }
+            while (currentShape.position.X + currentShape.getEmptyWidth() < 0)
+            {
+                Move(currentShape, true, gridWidth);
+            }
+        }
+
         // handles the input before we update
         public void HandleInput(GameTime gameTime, InputHelper inputHelper)
         {
@@ -79,19 +115,19 @@ namespace Tetris.Tetris
 
             if (inputHelper.KeyPressed(Keys.Left))
             {
-                this.currentShape.Move(false, grid.width);
+                Move(currentShape, false, grid.width);
             }
             if (inputHelper.KeyPressed(Keys.Right))
             {
-                this.currentShape.Move(true, grid.width);
+                Move(currentShape, true, grid.width);
             }
             if (inputHelper.KeyPressed(Keys.A))
             {
-                this.currentShape.Rotate(false, grid.width);
+                currentShape.Rotate(false, grid.width, this);
             }
             if (inputHelper.KeyPressed(Keys.D))
             {
-                this.currentShape.Rotate(true, grid.width);
+                currentShape.Rotate(true, grid.width, this);
             }
             if (inputHelper.KeyDown(Keys.LeftShift))
             {
@@ -104,11 +140,13 @@ namespace Tetris.Tetris
         {
             this.totalTicks++;
 
-            if (!grid.NextPosValid(this.currentShape))
+            if(grid.currentscore > 0)
             {
-                NewShape();
-                return;
+                score += grid.currentscore;
+                grid.currentscore = 0;
             }
+
+            grid.CheckRows();
 
             if (!holdsLeftShift && this.totalTicks % 30 == 0)
             {
@@ -118,6 +156,12 @@ namespace Tetris.Tetris
             {
                 currentShape.position.Y++;
             }
+            if (!grid.NextPosValid(this.currentShape, 0) && this.totalTicks % 6 == 0)
+            {
+                NewShape();
+                return;
+            }
+
 
 
         }
@@ -143,6 +187,7 @@ namespace Tetris.Tetris
 
             }
             currentShape.Draw(position, spriteBatch, filled_block);
+            spriteBatch.DrawString(font, $"score: {score}", new Vector2(600, 100), Color.White);
         }
     }
 }

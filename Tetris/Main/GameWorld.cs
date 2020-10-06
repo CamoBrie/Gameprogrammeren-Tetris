@@ -133,9 +133,11 @@ namespace Main
             // Game Over
             temp = new List<MenuItems>
             {
-                new MenuItems("Game Over", Color.Gray),
-                new MenuItems("Your score is: ", Color.Gray),
                 new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
+                new MenuItems(" ", Color.White),
+                new MenuItems("Game Over", Color.Gray),
+                new MenuItems($"Your score is: ", Color.Gray),
+                
 
 
             };
@@ -255,11 +257,16 @@ namespace Main
                 case GameState.Settings:
                 case GameState.Credits:
                 case GameState.GameOver:
+                    GameOver.RenameItem(3, $"Your score is: {game.score}");
                     break;
 
                 // update game
                 case GameState.Running:
                     game.Update(gameTime);
+                    if(game.gameOver)
+                    {
+                        gameState = GameState.GameOver;
+                    }
                     break;
 
             }
