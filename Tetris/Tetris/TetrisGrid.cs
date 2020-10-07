@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Windows.Forms;
 
 namespace Tetris.Tetris
 {
@@ -25,6 +24,53 @@ namespace Tetris.Tetris
             }
         }
 
+        public void GravSwitch(bool isRight)
+        {
+            Color temp;
+            if (isRight)
+            {
+                for (int times = 0; times < 3; times++)
+                {
+                    for (int x = 0; x < height; x++)
+                    {
+                        for (int i = 0; i <= width - 1; i++)
+                        {
+                            for (int j = i + 1; j < width; j++)
+                            {
+                                if (placedTiles[i, x].PackedValue < placedTiles[j, x].PackedValue)
+                                {
+                                    temp = placedTiles[i, x];
+                                    placedTiles[i, x] = placedTiles[j, x];
+                                    placedTiles[j, x] = temp;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int times = 0; times < 3; times++)
+                {
+                    for (int x = 0; x < height; x++)
+                    {
+                        for (int i = 0; i <= width - 1; i++)
+                        {
+                            for (int j = i + 1; j < width; j++)
+                            {
+                                if (placedTiles[i, x].PackedValue > placedTiles[j, x].PackedValue)
+                                {
+                                    temp = placedTiles[i, x];
+                                    placedTiles[i, x] = placedTiles[j, x];
+                                    placedTiles[j, x] = temp;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void CheckRows()
         {
             // create new empty array
@@ -33,27 +79,27 @@ namespace Tetris.Tetris
             {
                 for (int j = 0; j < width; j++)
                 {
-                        temparr[j, i] = placedTiles[j,i];
+                    temparr[j, i] = placedTiles[j, i];
                 }
             }
 
             int linesCleared = 0;
             bool flag = false;
 
-            for(int i = 0; i < height; i++)
+            for (int i = 0; i < height; i++)
             {
                 int counter = 0;
 
-                for(int j = 0; j < width; j++)
+                for (int j = 0; j < width; j++)
                 {
-                    if(placedTiles[j,i] != Color.White)
+                    if (placedTiles[j, i] != Color.White)
                     {
                         counter++;
 
                     }
                 }
 
-                if(counter == width)
+                if (counter == width)
                 {
                     flag = true;
                     linesCleared++;
@@ -68,10 +114,10 @@ namespace Tetris.Tetris
                 }
             }
 
-            if(flag)
+            if (flag)
             {
                 placedTiles = temparr;
-                currentscore +=  200 * (int)Math.Floor(Math.Pow(linesCleared, 2));
+                currentscore += 200 * (int)Math.Floor(Math.Pow(linesCleared, 2));
             }
 
 
@@ -83,7 +129,7 @@ namespace Tetris.Tetris
         {
             Vector2 currentpos = currentShape.position;
 
-            switch(direction)
+            switch (direction)
             {
                 case 0: currentShape.position.Y++; break;
                 case 1: currentShape.position.Y--; break;

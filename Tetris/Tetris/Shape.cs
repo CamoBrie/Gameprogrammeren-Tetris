@@ -79,12 +79,13 @@ namespace Tetris.Tetris
                         {
                             spriteBatch.Draw(filled_block, new Vector2(border.X + (i + position.X) * filled_block.Width,
                             border.Y + (j + position.Y) * filled_block.Height), color);
-                        } else
+                        }
+                        else
                         {
                             spriteBatch.Draw(filled_block, new Vector2(border.X + i * filled_block.Width,
                             border.Y + j * filled_block.Height), color);
                         }
-            
+
         }
 
 

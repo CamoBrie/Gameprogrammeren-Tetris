@@ -94,11 +94,11 @@ namespace Main
             // Settings
             temp = new List<MenuItems>
             {
-                new MenuItems("Starting Level", Color.Gray),
+                new MenuItems("Starting Difficulty", Color.Gray),
                 new MenuItems("Grid Width", Color.Gray),
                 new MenuItems("Grid Height", Color.Gray),
                 new MenuItems("Animations", Color.Gray),
-                new MenuItems("Special Blocks", Color.Gray),
+                new MenuItems("Special Events", Color.Gray),
                 new MenuItems("Hidden Mode", Color.Gray),
                 new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),
 
@@ -124,7 +124,6 @@ namespace Main
                 new MenuItems("A & D for rotating", Color.Gray),
                 new MenuItems("S for saving a shape", Color.Gray),
                 new MenuItems("L. Shift for soft-dropping", Color.Gray),
-                new MenuItems("Space for hard-dropping", Color.Gray),
 
 
             };
@@ -137,7 +136,7 @@ namespace Main
                 new MenuItems(" ", Color.White),
                 new MenuItems("Game Over", Color.Gray),
                 new MenuItems($"Your score is: ", Color.Gray),
-                
+
 
 
             };
@@ -263,7 +262,7 @@ namespace Main
                 // update game
                 case GameState.Running:
                     game.Update(gameTime);
-                    if(game.gameOver)
+                    if (game.gameOver)
                     {
                         gameState = GameState.GameOver;
                     }

@@ -6,22 +6,22 @@ namespace Main
     // global enum for all the settings
     enum AllSettings
     {
-        Startinglevel,
+        StartingDifficulty,
         GridWidth,
         GridHeight,
         Animations,
-        SpecialBlocks,
+        SpecialEvents,
         HiddenMode,
         None
     }
     class Settings
     {
         // the variables for the settings
-        public static int StartingLevel = 1;
+        public static int StartingDifficulty = 1;
         public static int GridWidth = 10;
         public static int GridHeight = 20;
         public static bool Animations = true;
-        public static bool SpecialBlocks = true;
+        public static bool SpecialEvents = true;
         public static bool HiddenMode = false;
 
 
@@ -33,14 +33,14 @@ namespace Main
             {
                 // change setting based on bounds
 
-                case AllSettings.Startinglevel:
-                    if (positive && StartingLevel < 20)
+                case AllSettings.StartingDifficulty:
+                    if (positive && StartingDifficulty < 20)
                     {
-                        StartingLevel++;
+                        StartingDifficulty++;
                     }
-                    else if (!positive && StartingLevel > 1)
+                    else if (!positive && StartingDifficulty > 1)
                     {
-                        StartingLevel--;
+                        StartingDifficulty--;
                     }
                     break;
 
@@ -56,7 +56,7 @@ namespace Main
                     break;
 
                 case AllSettings.GridHeight:
-                    if (positive && GridHeight < 30)
+                    if (positive && GridHeight < 25)
                     {
                         GridHeight++;
                     }
@@ -73,8 +73,8 @@ namespace Main
                     Animations = !Animations;
                     break;
 
-                case AllSettings.SpecialBlocks:
-                    SpecialBlocks = !SpecialBlocks;
+                case AllSettings.SpecialEvents:
+                    SpecialEvents = !SpecialEvents;
                     break;
 
                 case AllSettings.HiddenMode:
@@ -90,14 +90,14 @@ namespace Main
         {
             switch (currentSetting)
             {
-                case AllSettings.Startinglevel:
-                    return StartingLevel.ToString();
+                case AllSettings.StartingDifficulty:
+                    return StartingDifficulty.ToString();
                 case AllSettings.GridWidth:
                     return GridWidth.ToString();
                 case AllSettings.GridHeight:
                     return GridHeight.ToString();
                 case AllSettings.Animations: return Animations.ToString();
-                case AllSettings.SpecialBlocks: return SpecialBlocks.ToString();
+                case AllSettings.SpecialEvents: return SpecialEvents.ToString();
                 case AllSettings.HiddenMode: return HiddenMode.ToString();
                 default:
                     return "x";
@@ -110,11 +110,11 @@ namespace Main
         {
             switch (currentSetting)
             {
-                case 0: return AllSettings.Startinglevel;
+                case 0: return AllSettings.StartingDifficulty;
                 case 1: return AllSettings.GridWidth;
                 case 2: return AllSettings.GridHeight;
                 case 3: return AllSettings.Animations;
-                case 4: return AllSettings.SpecialBlocks;
+                case 4: return AllSettings.SpecialEvents;
                 case 5: return AllSettings.HiddenMode;
                 default:
                     return AllSettings.None;

@@ -10,14 +10,6 @@ namespace Tetris.Tetris
     class GameManager
     {
 
-        private Shape CShape;
-        private Shape LShape;
-        private Shape RLShape;
-        private Shape IShape;
-        private Shape SShape;
-        private Shape ZShape;
-        private Shape TShape;
-
         //texture variables
         private readonly Texture2D empty_block;
         private readonly Texture2D filled_block;
@@ -33,6 +25,9 @@ namespace Tetris.Tetris
         private Shape nextShape;
         private Shape savedShape;
 
+        String specialEventName;
+        double timeMulti;
+
         // input variables
         bool holdsLeftShift;
         bool hasSaved;
@@ -43,7 +38,7 @@ namespace Tetris.Tetris
             this.position = position;
             this.empty_block = empty_block;
             this.filled_block = filled_block;
-            random = new Random();
+            this.random = new Random();
         }
 
         public void Initialize()
@@ -55,6 +50,8 @@ namespace Tetris.Tetris
             savedShape = new Shape(Shape.Shapes.I, Settings.GridWidth);
 
             hasSaved = false;
+            specialEventName = "";
+            timeMulti = 1;
         }
 
         public void NewShape()
@@ -91,7 +88,7 @@ namespace Tetris.Tetris
 
         public void saveShape()
         {
-            if(!hasSaved)
+            if (!hasSaved)
             {
                 Shape temp = savedShape;
                 Vector2 tempPos = currentShape.position;
@@ -100,6 +97,7 @@ namespace Tetris.Tetris
                 currentShape.position = tempPos;
 
                 hasSaved = true;
+
             }
         }
 
@@ -128,6 +126,34 @@ namespace Tetris.Tetris
             while (currentShape.position.X + currentShape.getEmptyWidth() < 0)
             {
                 Move(currentShape, true, gridWidth);
+            }
+        }
+
+        public void SpecialEvent()
+        {
+            int currentEvent = random.Next(0, 5);
+
+            switch (currentEvent)
+            {
+                case 0:
+                    grid.GravSwitch(true);
+                    specialEventName = "Gravity Switch to the Right!";
+                    break;
+                case 1:
+                    grid.GravSwitch(false);
+                    specialEventName = "Gravity Switch to the Left!";
+                    break;
+                case 2:
+                    timeMulti = 2;
+                    specialEventName = "Time speedup!";
+                    break;
+                case 3:
+                    timeMulti = 0.5;
+                    specialEventName = "Time slowdown!";
+                    break;
+                default:
+                    specialEventName = "No event!";
+                    break;
             }
         }
 
@@ -168,7 +194,8 @@ namespace Tetris.Tetris
         {
             totalTicks++;
 
-            if(grid.currentscore > 0)
+
+            if (grid.currentscore > 0)
             {
                 score += grid.currentscore;
                 grid.currentscore = 0;
@@ -180,46 +207,64 @@ namespace Tetris.Tetris
             int temp1, temp2;
             if (score != 0)
             {
-                temp1 = (int)(30 - 2 * Math.Floor(Math.Log10(score)));
-                temp2 = (int)(6 - Math.Log10(score) / Math.Log10(100));
-            } else
+                    temp1 = (int)((31 - Settings.StartingDifficulty) -  Math.Floor(Math.Log10(score)));
+                    temp2 = (int)(6 - Math.Log10(score) / Math.Log10(100));
+
+            }
+            else 
             {
-                temp1 = 30;
+                temp1 = 31 - Settings.StartingDifficulty;
                 temp2 = 6;
             }
 
-            if (!holdsLeftShift && totalTicks % temp1 == 0)
-            {
-                currentShape.position.Y++;
-            }
-            if (holdsLeftShift && totalTicks % temp2 == 0)
-            {
-                currentShape.position.Y++;
-            }
-            if (!grid.NextPosValid(currentShape, 0))
+            if (!grid.NextPosValid(currentShape, 0) && totalTicks % 5 == 0)
             {
                 NewShape();
                 return;
             }
 
+            if (!holdsLeftShift && totalTicks % (temp1 / timeMulti) == 0 && grid.NextPosValid(currentShape, 0))
+            {
+                currentShape.position.Y++;
+            }
+            if (holdsLeftShift && totalTicks % (temp2/timeMulti) == 0 && grid.NextPosValid(currentShape, 0))
+            {
+                currentShape.position.Y++;
+            }
 
+            if (totalTicks % 300 == 0 && Settings.SpecialEvents)
+            {
+                timeMulti = 1;
+                specialEventName = "";
+            }
+
+            if (totalTicks % 600 == 0 && Settings.SpecialEvents)
+            {
+                SpecialEvent();
+            }
 
         }
 
         // runs everytime we draw to the screen
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
+
+            spriteBatch.Draw(filled_block, new Rectangle((int)position.X, (int)position.Y, grid.width * 32, grid.height * 32), Color.Gray);
+
             for (int i = 0; i < grid.width; i++)
             {
                 for (int j = 0; j < grid.height; j++)
                 {
-                    if (grid.placedTiles[i, j] != Color.White)
+                    if (!Settings.HiddenMode)
                     {
-                        spriteBatch.Draw(filled_block, Vector2.Add(position, new Vector2(i * 32, j * 32)), grid.placedTiles[i, j]);
-                    }
-                    else
-                    {
-                        spriteBatch.Draw(empty_block, Vector2.Add(position, new Vector2(i * 32, j * 32)), Color.White);
+                        if (grid.placedTiles[i, j] != Color.White)
+                        {
+                            spriteBatch.Draw(filled_block, Vector2.Add(position, new Vector2(i * 32, j * 32)), grid.placedTiles[i, j]);
+                        }
+                        else
+                        {
+                            spriteBatch.Draw(empty_block, Vector2.Add(position, new Vector2(i * 32, j * 32)), Color.White);
+                        }
                     }
                 }
 
@@ -235,6 +280,12 @@ namespace Tetris.Tetris
             savedShape.Draw(new Vector2(700, 550), spriteBatch, filled_block, false);
 
             spriteBatch.DrawString(font, $"score: {score}", new Vector2(700, 100), Color.White);
+
+            if (Settings.SpecialEvents)
+            {
+                spriteBatch.DrawString(font, $"time until next event: {Math.Round(((double)600 - (totalTicks % 600)) / 60)}", new Vector2(600, 750), Color.White);
+                spriteBatch.DrawString(font, specialEventName, new Vector2(550, 800), Color.White);
+            }
         }
     }
 }
