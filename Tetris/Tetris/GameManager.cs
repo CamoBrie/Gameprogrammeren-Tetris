@@ -30,9 +30,12 @@ namespace Tetris.Tetris
         private Random random;
         public bool gameOver;
         public int score;
+        private Shape nextShape;
+        private Shape savedShape;
 
         // input variables
         bool holdsLeftShift;
+        bool hasSaved;
 
         // constructor
         public GameManager(Vector2 position, Texture2D empty_block, Texture2D filled_block)
@@ -45,9 +48,13 @@ namespace Tetris.Tetris
 
         public void Initialize()
         {
-            this.grid = new TetrisGrid(Settings.GridWidth, Settings.GridHeight);
+            grid = new TetrisGrid(Settings.GridWidth, Settings.GridHeight);
 
-            this.currentShape = new Shape(Shape.Shapes.L, Settings.GridWidth);
+            currentShape = new Shape(GenerateShape(), Settings.GridWidth);
+            nextShape = new Shape(GenerateShape(), Settings.GridWidth);
+            savedShape = new Shape(Shape.Shapes.I, Settings.GridWidth);
+
+            hasSaved = false;
         }
 
         public void NewShape()
@@ -64,9 +71,11 @@ namespace Tetris.Tetris
 
                 }
             }
-            this.currentShape = new Shape(GenerateShape(), Settings.GridWidth);
+            currentShape = nextShape;
+            nextShape = new Shape(GenerateShape(), Settings.GridWidth);
+            hasSaved = false;
 
-            if(!grid.NextPosValid(currentShape, 5))
+            if (!grid.NextPosValid(currentShape, 5))
             {
                 gameOver = true;
             }
@@ -78,6 +87,20 @@ namespace Tetris.Tetris
             int type = random.Next(0, Enum.GetNames(typeof(Shape.Shapes)).Length);
 
             return (Shape.Shapes)type;
+        }
+
+        public void saveShape()
+        {
+            if(!hasSaved)
+            {
+                Shape temp = savedShape;
+                Vector2 tempPos = currentShape.position;
+                savedShape = currentShape;
+                currentShape = temp;
+                currentShape.position = tempPos;
+
+                hasSaved = true;
+            }
         }
 
         public void Move(Shape currentShape, bool right, int gridWidth)
@@ -133,12 +156,17 @@ namespace Tetris.Tetris
             {
                 holdsLeftShift = true;
             }
+            if (inputHelper.KeyDown(Keys.S))
+            {
+                saveShape();
+
+            }
         }
 
         // runs everytime an update is needed
         public void Update(GameTime gameTime)
         {
-            this.totalTicks++;
+            totalTicks++;
 
             if(grid.currentscore > 0)
             {
@@ -148,15 +176,27 @@ namespace Tetris.Tetris
 
             grid.CheckRows();
 
-            if (!holdsLeftShift && this.totalTicks % 30 == 0)
+
+            int temp1, temp2;
+            if (score != 0)
+            {
+                temp1 = (int)(30 - 2 * Math.Floor(Math.Log10(score)));
+                temp2 = (int)(6 - Math.Log10(score) / Math.Log10(100));
+            } else
+            {
+                temp1 = 30;
+                temp2 = 6;
+            }
+
+            if (!holdsLeftShift && totalTicks % temp1 == 0)
             {
                 currentShape.position.Y++;
             }
-            if (holdsLeftShift && this.totalTicks % 6 == 0)
+            if (holdsLeftShift && totalTicks % temp2 == 0)
             {
                 currentShape.position.Y++;
             }
-            if (!grid.NextPosValid(this.currentShape, 0) && this.totalTicks % 6 == 0)
+            if (!grid.NextPosValid(currentShape, 0))
             {
                 NewShape();
                 return;
@@ -186,8 +226,15 @@ namespace Tetris.Tetris
 
 
             }
-            currentShape.Draw(position, spriteBatch, filled_block);
-            spriteBatch.DrawString(font, $"score: {score}", new Vector2(600, 100), Color.White);
+            currentShape.Draw(position, spriteBatch, filled_block, true);
+
+            spriteBatch.DrawString(font, $"Next piece: ", new Vector2(700, 300), Color.White);
+            nextShape.Draw(new Vector2(700, 350), spriteBatch, filled_block, false);
+
+            spriteBatch.DrawString(font, $"Saved piece: ", new Vector2(700, 500), Color.White);
+            savedShape.Draw(new Vector2(700, 550), spriteBatch, filled_block, false);
+
+            spriteBatch.DrawString(font, $"score: {score}", new Vector2(700, 100), Color.White);
         }
     }
 }
