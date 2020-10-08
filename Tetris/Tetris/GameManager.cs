@@ -27,6 +27,7 @@ namespace Tetris.Tetris
 
         String specialEventName;
         double timeMulti;
+        bool hiddenEvent;
 
         // input variables
         bool holdsLeftShift;
@@ -52,6 +53,7 @@ namespace Tetris.Tetris
             hasSaved = false;
             specialEventName = "";
             timeMulti = 1;
+            hiddenEvent = false;
         }
 
         public void NewShape()
@@ -151,6 +153,10 @@ namespace Tetris.Tetris
                     timeMulti = 0.5;
                     specialEventName = "Time slowdown!";
                     break;
+                case 4:
+                    hiddenEvent = true;
+                    specialEventName = "Hidden Mode!";
+                    break;
                 default:
                     specialEventName = "No event!";
                     break;
@@ -235,7 +241,9 @@ namespace Tetris.Tetris
             if (totalTicks % 300 == 0 && Settings.SpecialEvents)
             {
                 timeMulti = 1;
+                hiddenEvent = false;
                 specialEventName = "";
+
             }
 
             if (totalTicks % 600 == 0 && Settings.SpecialEvents)
@@ -255,9 +263,9 @@ namespace Tetris.Tetris
             {
                 for (int j = 0; j < grid.height; j++)
                 {
-                    if (!Settings.HiddenMode)
+                    if (!(Settings.HiddenMode || (hiddenEvent && j > grid.height-10)))
                     {
-                        if (grid.placedTiles[i, j] != Color.White)
+                        if (grid.placedTiles[i, j] != Color.White )
                         {
                             spriteBatch.Draw(filled_block, Vector2.Add(position, new Vector2(i * 32, j * 32)), grid.placedTiles[i, j]);
                         }
