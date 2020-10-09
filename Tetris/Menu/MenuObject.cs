@@ -29,7 +29,7 @@ namespace Menu
         }
 
 
-
+        //change the text to be displayed
         public void RenameItem(int item, String text)
         {
             this.items[item].text = text;

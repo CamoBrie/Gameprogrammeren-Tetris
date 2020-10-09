@@ -5,6 +5,7 @@ namespace Tetris.Tetris
 {
     class Shape
     {
+        //list of possible shapes
         public enum Shapes
         {
             C,
@@ -26,7 +27,7 @@ namespace Tetris.Tetris
         {
             this.shape = currentShape;
             this.position = new Vector2((int)gridWidth / 2 - 1, 0);
-            setShape(currentShape);
+            SetShape(currentShape);
         }
 
         // https://www.ict.social/csharp/monogame/csharp-programming-games-monogame-tetris/tetris-in-monogame-block
@@ -56,6 +57,7 @@ namespace Tetris.Tetris
             {
                 for (int y = 0; y < 4; y++)
                 {
+                    //rotate right or left
                     if (right)
                     {
                         arr[x, y] = a[y, 3 - x];
@@ -70,8 +72,10 @@ namespace Tetris.Tetris
             }
         }
 
+        //draw the shape
         public void Draw(Vector2 border, SpriteBatch spriteBatch, Texture2D filled_block, bool inGame)
         {
+            //loop through the array and draw a block where there is one
             for (int j = 0; j < 4; j++)
                 for (int i = 0; i < 4; i++)
                     if (arr[i, j] > 0)
@@ -88,9 +92,8 @@ namespace Tetris.Tetris
 
         }
 
-
-
-        public int getWidth()
+        //get the width of the block
+        public int GetWidth()
         {
             int result = 0;
             for (int i = 0; i < 4; i++)
@@ -107,7 +110,8 @@ namespace Tetris.Tetris
             return result;
         }
 
-        public int getEmptyWidth()
+        //get the width of the empty part infront of the block
+        public int GetEmptyWidth()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -123,7 +127,8 @@ namespace Tetris.Tetris
             return 0;
         }
 
-        public void setShape(Shapes currentShape)
+        //set the current shape and color, according to the parameter
+        public void SetShape(Shapes currentShape)
         {
             switch (currentShape)
             {

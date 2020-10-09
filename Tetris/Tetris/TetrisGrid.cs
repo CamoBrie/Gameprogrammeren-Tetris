@@ -24,53 +24,48 @@ namespace Tetris.Tetris
             }
         }
 
+        /// <summary>
+        /// sorts array based on the color value, we need to write our own since Color does not have a Compare function
+        /// </summary>
+        /// <param name="isRight"></param>
         public void GravSwitch(bool isRight)
         {
-            Color temp;
-            if (isRight)
+            for(int row = 0; row < height; row++)
             {
-                for (int times = 0; times < 3; times++)
+                //populate empty array
+                Color[] temp = new Color[width];
+                for(int i = 0; i<temp.Length; i++)
                 {
-                    for (int x = 0; x < height; x++)
+                    temp[i] = Color.White;
+                }
+
+                int pointer = 0;
+                if(isRight)
+                {
+                    pointer = temp.Length - 1;
+                }
+
+                //check and move the tile to the left
+                for (int col = 0; col < width; col++)
+                {
+                    if(placedTiles[col,row] != Color.White)
                     {
-                        for (int i = 0; i <= width - 1; i++)
-                        {
-                            for (int j = i + 1; j < width; j++)
-                            {
-                                if (placedTiles[i, x].PackedValue < placedTiles[j, x].PackedValue)
-                                {
-                                    temp = placedTiles[i, x];
-                                    placedTiles[i, x] = placedTiles[j, x];
-                                    placedTiles[j, x] = temp;
-                                }
-                            }
-                        }
+                        temp[pointer] = placedTiles[col,row];
+                        pointer += isRight ? -1 : 1;
                     }
                 }
-            }
-            else
-            {
-                for (int times = 0; times < 3; times++)
+
+                //update the new array
+                for (int col = 0; col < width; col++)
                 {
-                    for (int x = 0; x < height; x++)
-                    {
-                        for (int i = 0; i <= width - 1; i++)
-                        {
-                            for (int j = i + 1; j < width; j++)
-                            {
-                                if (placedTiles[i, x].PackedValue > placedTiles[j, x].PackedValue)
-                                {
-                                    temp = placedTiles[i, x];
-                                    placedTiles[i, x] = placedTiles[j, x];
-                                    placedTiles[j, x] = temp;
-                                }
-                            }
-                        }
-                    }
+                    placedTiles[col, row] = temp[col];
                 }
             }
         }
-
+        /// <summary>
+        /// TODO: hella ugly but it works (make it better)
+        /// there is probably a better way to do this, but this is all I could come up with without copying code from the internet
+        /// </summary>
         public void CheckRows()
         {
             // create new empty array
@@ -83,13 +78,16 @@ namespace Tetris.Tetris
                 }
             }
 
+            //set temp variables
             int linesCleared = 0;
             bool flag = false;
 
+            //count the lines cleared
             for (int i = 0; i < height; i++)
             {
                 int counter = 0;
 
+                //count the amount of tiles in a row
                 for (int j = 0; j < width; j++)
                 {
                     if (placedTiles[j, i] != Color.White)
@@ -99,11 +97,13 @@ namespace Tetris.Tetris
                     }
                 }
 
+                //full row = line clear
                 if (counter == width)
                 {
                     flag = true;
                     linesCleared++;
-
+                    
+                    //move all the lines above the cleared line down 
                     for (int j = 0; j < width; j++)
                     {
                         for (int x = i; x > 0; x--)
@@ -114,21 +114,20 @@ namespace Tetris.Tetris
                 }
             }
 
+            //if a line is cleared, add to the score and replace the array
             if (flag)
             {
                 placedTiles = temparr;
                 currentscore += 200 * (int)Math.Floor(Math.Pow(linesCleared, 2));
             }
-
-
-
-
         }
 
+        ///check if the next position is valid
         public bool NextPosValid(Shape currentShape, int direction)
         {
             Vector2 currentpos = currentShape.position;
 
+            //change the next position based on the parameter
             switch (direction)
             {
                 case 0: currentShape.position.Y++; break;
@@ -139,7 +138,7 @@ namespace Tetris.Tetris
             }
 
 
-
+            //loop through all the blocks and see if it overlaps the current grid
             for (int x = 0; x < 4; x++)
             {
                 for (int y = 0; y < 4; y++)
@@ -164,6 +163,8 @@ namespace Tetris.Tetris
 
                 }
             }
+
+            //reset the position
             currentShape.position = currentpos;
             return true;
         }

@@ -3,6 +3,8 @@ using Main;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+
+//due to conflict we need to define this
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Tetris.Tetris
@@ -13,21 +15,31 @@ namespace Tetris.Tetris
         //texture variables
         private readonly Texture2D empty_block;
         private readonly Texture2D filled_block;
+
+        //position of the grid relative to the screen
         private Vector2 position;
 
         //object variables
         private TetrisGrid grid;
-        private int totalTicks;
-        private Shape currentShape;
-        private Random random;
+        private readonly Random random;
+
+        //gamestate variables
         public bool gameOver;
         public int score;
+
+        //total ticks elapsed
+        private int totalTicks;
+
+        //special event variables
+        private String specialEventName;
+        private double timeMulti;
+        private bool hiddenEvent;
+
+        //shape variables
+        private Shape currentShape;
         private Shape nextShape;
         private Shape savedShape;
 
-        String specialEventName;
-        double timeMulti;
-        bool hiddenEvent;
 
         // input variables
         bool holdsLeftShift;
@@ -42,38 +54,51 @@ namespace Tetris.Tetris
             this.random = new Random();
         }
 
+        //set the initial variables, this function will be called when the game starts, not when the application starts
         public void Initialize()
         {
+            //set the grid to the size defined in the settings
             grid = new TetrisGrid(Settings.GridWidth, Settings.GridHeight);
 
+            //set the shapes
             currentShape = new Shape(GenerateShape(), Settings.GridWidth);
             nextShape = new Shape(GenerateShape(), Settings.GridWidth);
+
+            //freebie!
             savedShape = new Shape(Shape.Shapes.I, Settings.GridWidth);
 
+            //set variables to keep track of gamestates
             hasSaved = false;
             specialEventName = "";
             timeMulti = 1;
             hiddenEvent = false;
         }
 
+        //place a shape, set the currentshape and create a new one
         public void NewShape()
         {
-
+            //place the current shape in the array
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
                     if (currentShape.arr[i, j] > 0)
                     {
+                        if((int)Math.Floor(currentShape.position.X) + i < grid.width && (int)Math.Floor(currentShape.position.Y) + j < grid.height)
                         grid.placedTiles[(int)Math.Floor(currentShape.position.X) + i, (int)Math.Floor(currentShape.position.Y) + j] = currentShape.color;
                     }
 
                 }
             }
+
+            //set the next shape and create a new one.
             currentShape = nextShape;
             nextShape = new Shape(GenerateShape(), Settings.GridWidth);
+
+            //this means that you can swap with the saved block again
             hasSaved = false;
 
+            //check if game over
             if (!grid.NextPosValid(currentShape, 5))
             {
                 gameOver = true;
@@ -81,6 +106,7 @@ namespace Tetris.Tetris
 
         }
 
+        //it generates a shape based on the amount of shapes
         public Shape.Shapes GenerateShape()
         {
             int type = random.Next(0, Enum.GetNames(typeof(Shape.Shapes)).Length);
@@ -88,51 +114,64 @@ namespace Tetris.Tetris
             return (Shape.Shapes)type;
         }
 
-        public void saveShape()
+        //switch the currentshape with the saved shape
+        public void SaveShape()
         {
+            //can only save once per shape
             if (!hasSaved)
             {
+                //temporary variables to keep track of the shape
                 Shape temp = savedShape;
-                Vector2 tempPos = currentShape.position;
+
+                //switch out the variables using a temp variable and reset shape position to top of grid
                 savedShape = currentShape;
                 currentShape = temp;
-                currentShape.position = tempPos;
+                currentShape.position = new Vector2((int)grid.width / 2 - 1, 0); ;
 
+                //set it so we have saved already this shape
                 hasSaved = true;
 
             }
         }
 
+        //TODO:move to Shape.cs
+        //move the shape to the right or left, and constrain it to the grid.
         public void Move(Shape currentShape, bool right, int gridWidth)
         {
+            //if going to the right
             if (right)
             {
-                if (currentShape.position.X + currentShape.getWidth() < gridWidth && grid.NextPosValid(currentShape, 2))
+                if (currentShape.position.X + currentShape.GetWidth() < gridWidth && grid.NextPosValid(currentShape, 2))
                 {
                     currentShape.position.X++;
                 }
             }
+            //if going to the left
             else
             {
-                if (currentShape.position.X + currentShape.getEmptyWidth() > 0 && grid.NextPosValid(currentShape, 3))
+                if (currentShape.position.X + currentShape.GetEmptyWidth() > 0 && grid.NextPosValid(currentShape, 3))
                     currentShape.position.X--;
             }
         }
 
+        //TODO:move to Shape.cs
+        //force the shape to the grid
         public void MoveToGrid(int gridWidth)
         {
-            while (currentShape.position.X + currentShape.getWidth() > gridWidth)
+            while (currentShape.position.X + currentShape.GetWidth() > gridWidth)
             {
                 Move(currentShape, false, gridWidth);
             }
-            while (currentShape.position.X + currentShape.getEmptyWidth() < 0)
+            while (currentShape.position.X + currentShape.GetEmptyWidth() < 0)
             {
                 Move(currentShape, true, gridWidth);
             }
         }
 
+        //sets the special event and changes the variables accordingly
         public void SpecialEvent()
         {
+            //create a random event
             int currentEvent = random.Next(0, 5);
 
             switch (currentEvent)
@@ -168,6 +207,7 @@ namespace Tetris.Tetris
         {
             holdsLeftShift = false;
 
+            //handle the keypresses
             if (inputHelper.KeyPressed(Keys.Left))
             {
                 Move(currentShape, false, grid.width);
@@ -188,9 +228,9 @@ namespace Tetris.Tetris
             {
                 holdsLeftShift = true;
             }
-            if (inputHelper.KeyDown(Keys.S))
+            if (inputHelper.KeyPressed(Keys.S))
             {
-                saveShape();
+                SaveShape();
 
             }
         }
@@ -198,21 +238,24 @@ namespace Tetris.Tetris
         // runs everytime an update is needed
         public void Update(GameTime gameTime)
         {
+            //add a tick to the game
             totalTicks++;
 
-
+            //add the score to the total
             if (grid.currentscore > 0)
             {
                 score += grid.currentscore;
                 grid.currentscore = 0;
             }
 
+            //clear any rows if possible
             grid.CheckRows();
 
-
+            //create temporary variables to set the gamespeed
             int temp1, temp2;
             if (score != 0)
             {
+                //has some score, so we can make the game more difficult based on it
                     temp1 = (int)((31 - Settings.StartingDifficulty) -  Math.Floor(Math.Log10(score)));
                     temp2 = (int)(6 - Math.Log10(score) / Math.Log10(100));
 
@@ -223,21 +266,26 @@ namespace Tetris.Tetris
                 temp2 = 6;
             }
 
+            //check if the next position is valid and creates a new shape based on it.
             if (!grid.NextPosValid(currentShape, 0) && totalTicks % 5 == 0)
             {
                 NewShape();
                 return;
             }
 
-            if (!holdsLeftShift && totalTicks % (temp1 / timeMulti) == 0 && grid.NextPosValid(currentShape, 0))
+            //normal behavior and runs based on temp variables
+            if (!holdsLeftShift && totalTicks % (temp1/timeMulti) == 0 && grid.NextPosValid(currentShape, 0))
             {
                 currentShape.position.Y++;
             }
+
+            //while holding shift (quick drop), drop faster
             if (holdsLeftShift && totalTicks % (temp2/timeMulti) == 0 && grid.NextPosValid(currentShape, 0))
             {
                 currentShape.position.Y++;
             }
 
+            //reset the special event every 5 seconds
             if (totalTicks % 300 == 0 && Settings.SpecialEvents)
             {
                 timeMulti = 1;
@@ -246,6 +294,7 @@ namespace Tetris.Tetris
 
             }
 
+            //every 10 seconds, create an event
             if (totalTicks % 600 == 0 && Settings.SpecialEvents)
             {
                 SpecialEvent();
@@ -256,9 +305,10 @@ namespace Tetris.Tetris
         // runs everytime we draw to the screen
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
-
+            //draw a background for the grid
             spriteBatch.Draw(filled_block, new Rectangle((int)position.X, (int)position.Y, grid.width * 32, grid.height * 32), Color.Gray);
 
+            //draw the grid based on filled blocks and give a color to them
             for (int i = 0; i < grid.width; i++)
             {
                 for (int j = 0; j < grid.height; j++)
@@ -279,16 +329,22 @@ namespace Tetris.Tetris
 
 
             }
+
+            //draw the currentshape in the grid
             currentShape.Draw(position, spriteBatch, filled_block, true);
 
+            //draw the next piece
             spriteBatch.DrawString(font, $"Next piece: ", new Vector2(700, 300), Color.White);
             nextShape.Draw(new Vector2(700, 350), spriteBatch, filled_block, false);
 
+            //draw the saved piece
             spriteBatch.DrawString(font, $"Saved piece: ", new Vector2(700, 500), Color.White);
             savedShape.Draw(new Vector2(700, 550), spriteBatch, filled_block, false);
 
+            //draw the score
             spriteBatch.DrawString(font, $"score: {score}", new Vector2(700, 100), Color.White);
 
+            //draw the special events 
             if (Settings.SpecialEvents)
             {
                 spriteBatch.DrawString(font, $"time until next event: {Math.Round(((double)600 - (totalTicks % 600)) / 60)}", new Vector2(600, 750), Color.White);

@@ -256,6 +256,7 @@ namespace Main
                 case GameState.Settings:
                 case GameState.Credits:
                 case GameState.GameOver:
+                    //change the text to the score
                     GameOver.RenameItem(3, $"Your score is: {game.score}");
                     break;
 
