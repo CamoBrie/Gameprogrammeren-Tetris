@@ -97,7 +97,7 @@ namespace Main
                 new MenuItems("Starting Difficulty", Color.Gray),
                 new MenuItems("Grid Width", Color.Gray),
                 new MenuItems("Grid Height", Color.Gray),
-                new MenuItems("Animations", Color.Gray),
+                //new MenuItems("Animations (not implemented due to time)", Color.Gray),
                 new MenuItems("Special Events", Color.Gray),
                 new MenuItems("Hidden Mode", Color.Gray),
                 new MenuItems("Back to Main Menu", Color.White, () => { this.gameState = GameState.MainMenu; return 0; }),

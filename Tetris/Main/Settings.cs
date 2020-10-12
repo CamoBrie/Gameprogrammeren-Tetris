@@ -9,7 +9,6 @@ namespace Main
         StartingDifficulty,
         GridWidth,
         GridHeight,
-        Animations,
         SpecialEvents,
         HiddenMode,
         None
@@ -20,10 +19,8 @@ namespace Main
         public static int StartingDifficulty = 1;
         public static int GridWidth = 10;
         public static int GridHeight = 20;
-        public static bool Animations = true;
         public static bool SpecialEvents = true;
         public static bool HiddenMode = false;
-
 
         // change a setting with respect to the bounds
         public static void ChangeSetting(bool positive = true, AllSettings currentSetting = 0)
@@ -68,11 +65,6 @@ namespace Main
 
 
                 // invert the setting | bool setting
-
-                case AllSettings.Animations:
-                    Animations = !Animations;
-                    break;
-
                 case AllSettings.SpecialEvents:
                     SpecialEvents = !SpecialEvents;
                     break;
@@ -96,7 +88,6 @@ namespace Main
                     return GridWidth.ToString();
                 case AllSettings.GridHeight:
                     return GridHeight.ToString();
-                case AllSettings.Animations: return Animations.ToString();
                 case AllSettings.SpecialEvents: return SpecialEvents.ToString();
                 case AllSettings.HiddenMode: return HiddenMode.ToString();
                 default:
@@ -113,14 +104,12 @@ namespace Main
                 case 0: return AllSettings.StartingDifficulty;
                 case 1: return AllSettings.GridWidth;
                 case 2: return AllSettings.GridHeight;
-                case 3: return AllSettings.Animations;
-                case 4: return AllSettings.SpecialEvents;
-                case 5: return AllSettings.HiddenMode;
+                case 3: return AllSettings.SpecialEvents;
+                case 4: return AllSettings.HiddenMode;
                 default:
                     return AllSettings.None;
 
             }
         }
-
     }
 }
