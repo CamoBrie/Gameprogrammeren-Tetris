@@ -36,7 +36,7 @@ namespace Tetris.Tetris
         private bool hiddenEvent;
 
         //shape variables
-        private Shape currentShape;
+        public Shape currentShape;
         private Shape nextShape;
         private Shape savedShape;
 
@@ -64,7 +64,7 @@ namespace Tetris.Tetris
             currentShape = new Shape(GenerateShape(), Settings.GridWidth);
             nextShape = new Shape(GenerateShape(), Settings.GridWidth);
 
-            //freebie!
+            //freebie! This could be seen as a feature, and also as a way to circumvent bugs (which one is it?). 
             savedShape = new Shape(Shape.Shapes.I, Settings.GridWidth);
 
             //set variables to keep track of gamestates
@@ -134,40 +134,6 @@ namespace Tetris.Tetris
             }
         }
 
-        //TODO:move to Shape.cs
-        //move the shape to the right or left, and constrain it to the grid.
-        public void Move(Shape currentShape, bool right, int gridWidth)
-        {
-            //if going to the right
-            if (right)
-            {
-                if (currentShape.position.X + currentShape.GetWidth() < gridWidth && grid.NextPosValid(currentShape, 2))
-                {
-                    currentShape.position.X++;
-                }
-            }
-            //if going to the left
-            else
-            {
-                if (currentShape.position.X + currentShape.GetEmptyWidth() > 0 && grid.NextPosValid(currentShape, 3))
-                    currentShape.position.X--;
-            }
-        }
-
-        //TODO:move to Shape.cs
-        //force the shape to the grid
-        public void MoveToGrid(int gridWidth)
-        {
-            while (currentShape.position.X + currentShape.GetWidth() > gridWidth)
-            {
-                Move(currentShape, false, gridWidth);
-            }
-            while (currentShape.position.X + currentShape.GetEmptyWidth() < 0)
-            {
-                Move(currentShape, true, gridWidth);
-            }
-        }
-
         //sets the special event and changes the variables accordingly
         public void SpecialEvent()
         {
@@ -210,19 +176,19 @@ namespace Tetris.Tetris
             //handle the keypresses
             if (inputHelper.KeyPressed(Keys.Left))
             {
-                Move(currentShape, false, grid.width);
+                currentShape.Move(false, grid.width, grid.NextPosValid(currentShape, 2));
             }
             if (inputHelper.KeyPressed(Keys.Right))
             {
-                Move(currentShape, true, grid.width);
+                currentShape.Move(true, grid.width, grid.NextPosValid(currentShape, 3));
             }
             if (inputHelper.KeyPressed(Keys.A))
             {
-                currentShape.Rotate(false, grid.width, this);
+                currentShape.Rotate(false, grid.width);
             }
             if (inputHelper.KeyPressed(Keys.D))
             {
-                currentShape.Rotate(true, grid.width, this);
+                currentShape.Rotate(true, grid.width);
             }
             if (inputHelper.KeyDown(Keys.LeftShift))
             {

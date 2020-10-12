@@ -25,9 +25,8 @@ namespace Tetris.Tetris
         }
 
         /// <summary>
-        /// sorts array based on the color value, we need to write our own since Color does not have a Compare function
+        /// moves all the placed tiles to one side or the other, based on the isRight parameter/
         /// </summary>
-        /// <param name="isRight"></param>
         public void GravSwitch(bool isRight)
         {
             for(int row = 0; row < height; row++)
@@ -153,10 +152,12 @@ namespace Tetris.Tetris
                             return false;
                         }
 
-                        if (placedTiles[(int)currentShape.position.X + x, (int)currentShape.position.Y + y] != Color.White)
-                        {
-                            currentShape.position = currentpos;
-                            return false;
+                        if (placedTiles.GetLength(0) > (int)currentShape.position.X + x && placedTiles.GetLength(1) > (int)currentShape.position.Y + y) {
+                            if (placedTiles[(int)currentShape.position.X + x, (int)currentShape.position.Y + y] != Color.White)
+                            {
+                                currentShape.position = currentpos;
+                                return false;
+                            }
                         }
 
                     }

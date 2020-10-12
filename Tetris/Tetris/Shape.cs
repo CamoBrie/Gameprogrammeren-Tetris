@@ -19,7 +19,6 @@ namespace Tetris.Tetris
 
         public Shapes shape { get; private set; }
         public int[,] arr { get; private set; }
-
         public Color color { get; private set; }
 
         public Vector2 position;
@@ -27,11 +26,13 @@ namespace Tetris.Tetris
         {
             this.shape = currentShape;
             this.position = new Vector2((int)gridWidth / 2 - 1, 0);
+
+            //set the 2d array
             SetShape(currentShape);
         }
 
         // https://www.ict.social/csharp/monogame/csharp-programming-games-monogame-tetris/tetris-in-monogame-block
-        // code to copy an 4x4 int array, this is necessary because c# passes array's by reference
+        // code to copy an 4x4 int array, this is necessary because c# passes arrays by reference
         private int[,] CopyTiles(int[,] tiles)
         {
             int[,] newTiles = new int[4, 4];
@@ -43,8 +44,9 @@ namespace Tetris.Tetris
 
         // https://www.ict.social/csharp/monogame/csharp-programming-games-monogame-tetris/tetris-in-monogame-block
         // code to rotate an 4x4 int array
-        public void Rotate(bool right, int gridWidth, GameManager game)
+        public void Rotate(bool right, int gridWidth)
         {
+            //we can just skip the cube shape, since it doesn't rotate
             if (shape == Shapes.C)
             {
                 return;
@@ -66,13 +68,13 @@ namespace Tetris.Tetris
                     {
                         arr[x, y] = a[3 - y, x];
                     }
-                    game.MoveToGrid(gridWidth);
-
                 }
             }
+            MoveToGrid(gridWidth);
         }
 
-        //draw the shape
+        //Draw the shape, we let the subclass handle it since it has access to all the data.
+        //inGame means that it is actually used in the grid, instead of just drawing it aside of the grid.
         public void Draw(Vector2 border, SpriteBatch spriteBatch, Texture2D filled_block, bool inGame)
         {
             //loop through the array and draw a block where there is one
@@ -224,6 +226,39 @@ namespace Tetris.Tetris
             }
 
 
+        }
+
+        //move the shape to the right or left, and constrain it to the grid.
+        //AllowedMove is there to check if the move is actually allowed, as a double-check.
+        public void Move(bool right, int gridWidth, bool AllowedMove)
+        {
+            //if going to the right
+            if (right)
+            {
+                if (position.X + GetWidth() < gridWidth && AllowedMove)
+                {
+                    position.X++;
+                }
+            }
+            //if going to the left
+            else
+            {
+                if (position.X + GetEmptyWidth() > 0 && AllowedMove)
+                    position.X--;
+            }
+        }
+
+        //force the shape to the grid, sometimes when we rotate we move outside of the playable area, so we just force it inside
+        public void MoveToGrid(int gridWidth)
+        {
+            while (position.X + GetWidth() > gridWidth)
+            {
+                Move(false, gridWidth, true);
+            }
+            while (position.X + GetEmptyWidth() < 0)
+            {
+                Move(true, gridWidth, true);
+            }
         }
     }
 }
