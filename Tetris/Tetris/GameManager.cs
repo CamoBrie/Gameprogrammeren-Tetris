@@ -204,7 +204,7 @@ namespace Tetris.Tetris
         // runs everytime an update is needed
         public void Update(GameTime gameTime)
         {
-            //add a tick to the game
+            //add a tick to the game, I found using this easier than using the gametime variable.
             totalTicks++;
 
             //add the score to the total
