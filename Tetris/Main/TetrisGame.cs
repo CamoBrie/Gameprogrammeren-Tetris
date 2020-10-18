@@ -55,6 +55,7 @@ namespace Main
 
         protected override void LoadContent()
         {
+            // create the spritebatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // create the game world
@@ -71,6 +72,7 @@ namespace Main
 
         protected override void Draw(GameTime gameTime)
         {
+            //start with a black background
             GraphicsDevice.Clear(Color.Black);
             gameWorld.Draw(gameTime, spriteBatch);
         }

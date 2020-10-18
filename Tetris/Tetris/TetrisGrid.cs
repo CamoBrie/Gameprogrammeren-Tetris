@@ -5,11 +5,13 @@ namespace Tetris.Tetris
 {
     class TetrisGrid
     {
+        //variables and an array for the grid
         public int width;
         public int height;
         public Color[,] placedTiles;
         public int currentscore;
 
+        //constructor
         public TetrisGrid(int width, int height)
         {
             this.width = width;

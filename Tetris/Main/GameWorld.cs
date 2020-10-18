@@ -165,6 +165,7 @@ namespace Main
                 // Menu - main menu
                 case GameState.MainMenu:
 
+                    // make sure that you cannot select a non-existent option
                     if (inputHelper.KeyPressed(Keys.Up) && MainMenu.currentItem > 0)
                     {
                         MainMenu.currentItem--;
@@ -185,6 +186,7 @@ namespace Main
                 // Menu - settings
                 case GameState.Settings:
 
+                    //same here
                     if (inputHelper.KeyPressed(Keys.Up) && SettingsMenu.currentItem > 0)
                     {
                         SettingsMenu.currentItem--;

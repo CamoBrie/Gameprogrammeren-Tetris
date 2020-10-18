@@ -112,7 +112,7 @@ namespace Tetris.Tetris
             return result;
         }
 
-        //get the width of the empty part infront of the block
+        //get the width of the empty part in front of the block
         public int GetEmptyWidth()
         {
             for (int i = 0; i < 4; i++)
