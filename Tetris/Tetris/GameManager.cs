@@ -72,6 +72,8 @@ namespace Tetris.Tetris
             specialEventName = "";
             timeMulti = 1;
             hiddenEvent = false;
+
+            gameOver = false;
         }
 
         //place a shape, set the currentshape and create a new one
@@ -176,11 +178,11 @@ namespace Tetris.Tetris
             //handle the keypresses
             if (inputHelper.KeyPressed(Keys.Left))
             {
-                currentShape.Move(false, grid.width, grid.NextPosValid(currentShape, 2));
+                currentShape.Move(false, grid.width);
             }
             if (inputHelper.KeyPressed(Keys.Right))
             {
-                currentShape.Move(true, grid.width, grid.NextPosValid(currentShape, 3));
+                currentShape.Move(true, grid.width);
             }
             if (inputHelper.KeyPressed(Keys.A))
             {

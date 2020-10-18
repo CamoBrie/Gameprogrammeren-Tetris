@@ -267,7 +267,7 @@ namespace Main
                     game.Update(gameTime);
                     if (game.gameOver)
                     {
-                        gameState = GameState.GameOver;
+                        gameState = GameState.GameOver;      
                     }
                     break;
 

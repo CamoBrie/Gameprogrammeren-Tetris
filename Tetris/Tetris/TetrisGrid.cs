@@ -148,7 +148,7 @@ namespace Tetris.Tetris
                     //y: y-value shape
                     if (currentShape.arr[x, y] > 0)
                     {
-                        if (currentShape.position.Y + y >= height)
+                        if (currentShape.position.Y + y >= height || currentShape.position.X + x < 0)
                         {
                             currentShape.position = currentpos;
                             return false;

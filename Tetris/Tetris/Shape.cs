@@ -228,14 +228,13 @@ namespace Tetris.Tetris
 
         }
 
-        //move the shape to the right or left, and constrain it to the grid.
-        //AllowedMove is there to check if the move is actually allowed, as a double-check.
-        public void Move(bool right, int gridWidth, bool AllowedMove)
+        //move the shape to the right or left, and constrain it to the grid. used to have another check here but it conflicted with boundary checking (shape was stuck to the left side) 
+        public void Move(bool right, int gridWidth)
         {
             //if going to the right
             if (right)
             {
-                if (position.X + GetWidth() < gridWidth && AllowedMove)
+                if (position.X + GetWidth() < gridWidth)
                 {
                     position.X++;
                 }
@@ -243,7 +242,7 @@ namespace Tetris.Tetris
             //if going to the left
             else
             {
-                if (position.X + GetEmptyWidth() > 0 && AllowedMove)
+                if (position.X + GetEmptyWidth() > 0)
                     position.X--;
             }
         }
@@ -253,11 +252,11 @@ namespace Tetris.Tetris
         {
             while (position.X + GetWidth() > gridWidth)
             {
-                Move(false, gridWidth, true);
+                Move(false, gridWidth);
             }
             while (position.X + GetEmptyWidth() < 0)
             {
-                Move(true, gridWidth, true);
+                Move(true, gridWidth);
             }
         }
     }
